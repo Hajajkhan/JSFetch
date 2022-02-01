@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fetching Random Quotes</title>
+    <style>
+        body{
+            display: flex;
+            flex-direction: column;
+            justify-items: center;
+        }
+        #loader {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            z-index: 1;
+            width: 60px;
+            height: 60px;
+            margin: -76px 0 0 -76px;
+            border: 16px solid #f3f3f3;
+            border-radius: 50%;
+            border-top: 16px solid #3498db;
+            -webkit-animation: spin 2s linear infinite;
+            animation: spin 2s linear infinite;
+        }
+        @-webkit-keyframes spin {
+            0% { -webkit-transform: rotate(0deg); }
+            100% { -webkit-transform: rotate(360deg); }
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        /* Add animation to "page content" */
+        .animate-bottom {
+            position: relative;
+            -webkit-animation-name: animatebottom;
+            -webkit-animation-duration: 1s;
+            animation-name: animatebottom;
+            animation-duration: 1s
+        }
+        @-webkit-keyframes animatebottom {
+            from { bottom:-100px; opacity:0 } 
+            to { bottom:0px; opacity:1 }
+        }
+        @keyframes animatebottom { 
+            from{ bottom:-100px; opacity:0 } 
+            to{ bottom:0; opacity:1 }
+        }
+        #mydiv {
+            display: none;
+            text-align: center;
+        }
+        .container{
+            background-color: #ccc;
+            align-items: center;
+            border: 2px solid black;
+            width: 100%;
+            height:100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+        q{
+            padding: 10px;
+        }
+        .container #getQuote{
+            background-color: black;
+            color: white;
+            display: flex;
+            width:70%;
+            align-items: center;
+            height: 200px;
+            justify-content: center;
+            margin: 10px;
+            border: 2px solid black;
+        }
+        .container #italic{
+            color: red;
+            font-weight: 18px;
+        }
+        .getQuote #date{
+            position: absolute;
+        }
+        .container #btn1{
+            margin: 5px;
+            border-radius: 10px;
+            padding:10px 20px ;
+            background-color: #0d6efd;
+            color: white;
+            font-weight: 18px;
+            box-shadow: 5px 10px 18px #888888;
+        }
+        .datedesign{
+            display: flex;
+            justify-content: end;
+            align-items: end;
+            text-align: right;
+            position: absolute;
+            right: 15rem;
+            top: 24rem;
+        }
+    </style>
+</head>
+<body onload="myFunction()" style="margin:0;" >
+    <div id="loader">
+
+    </div>
+    <div class="dd" style="display:none;"  id="mydiv">
+        <div class="container"  class="animate-bottom">
+            <div id="getQuote">
+                <q  id="inner1">
+                    Be your own hero, it's cheaper than a movie ticket.
+                </q>
+                <div class="datedesign">
+                    <i id="date"></i>
+                </div>
+            </div>
+            <i id="italic">
+                - Anonymous 
+            </i>
+            <button id="btn1" onclick="randomQuote()" >
+                Click it
+            </button>
+        </div>
+    </div>
+    <script>
+        function randomQuote(){
+            document.getElementById("loader").style.display = "block";
+            document.getElementById('mydiv').style.display="none";
+            myFunction();
+            fetch("https://api.quotable.io/random")
+            .then((data)=>data.json()
+            )
+            .then((data)=>{
+            document.getElementById("inner1").innerHTML = data.content;
+            document.getElementById('date').innerHTML= new Date(data.dateAdded).toLocaleDateString();
+            document.getElementById("italic").innerHTML = "- " + data.author;
+            });
+        }
+        //Script For Loader Section in which we will make the function to add delay on page
+        var myVar;
+        function myFunction() {
+          myVar = setTimeout(showPage, 1000);
+        }
+        function showPage() {
+          document.getElementById("loader").style.display = "none";
+          document.getElementById("mydiv").style.display = "block";
+        }
+    </script>
+        
+</body>
+</html>
